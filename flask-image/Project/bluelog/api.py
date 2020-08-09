@@ -1,11 +1,14 @@
 from time import sleep
 
-from flask import  abort, Response
+from flask import abort, Response
 from flask_restful import Resource, fields, marshal_with
 from flask_restful import reqparse
 from ..extension import db
 from ..models import Note
 import os
+
+from ..set_metrics import by_path_counter
+from ..extension import metrics
 
 
 def abort_if_todo_doesnt_exist(todo_id):
@@ -81,6 +84,11 @@ class initdb(Resource):
 
 
 class getversion(Resource):
+    # @s.time()
+    # @REQUEST_TIME.time()
+    # @metrics.do_not_track()
+    # @metrics.summary('requests_by_status', 'Request latencies by status',
+    #                  labels={'status': lambda r: r.status_code})
     def get(self):
         envrion = os.environ
         if 'imageVersion' in envrion:
@@ -88,6 +96,12 @@ class getversion(Resource):
         return {"message": "null"}
 
 class getversion_sleep(Resource):
+    # @c.count_exceptions()
+    # @s.time()
+    # @REQUEST_TIME.time()
+    # @metrics.do_not_track()
+    # @metrics.summary('requests_by_status', 'Request latencies by status',
+    #                  labels={'status': lambda r: r.status_code})
     def get(self):
         envrion = os.environ
         sleep(1)
@@ -97,6 +111,12 @@ class getversion_sleep(Resource):
 
 class getversion_sleeps(Resource):
     # 获得资源
+    # @c.count_exceptions()
+    # @s.time()
+    # @REQUEST_TIME.time()
+    # @metrics.do_not_track()
+    # @metrics.summary('requests_by_status', 'Request latencies by status',
+    #                  labels={'status': lambda r: r.status_code})
     def get(self, sleep_seconds):
         envrion = os.environ
         sleep(sleep_seconds)

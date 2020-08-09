@@ -1,11 +1,12 @@
 import os
 import click
 from flask import Flask
-from .extension import api
+from .extension import db, metrics, api
 from .setting import config
-from .bluelog import app_rustful
-from .bluelog import api_bp
-from .models import *
+# from .bluelog import app_rustful
+# from .bluelog import api_bp
+from .models import Note
+from .bluelog import *
 
 
 def creat_app(config_name=None):
@@ -15,20 +16,22 @@ def creat_app(config_name=None):
     app = Flask(__name__)
     app.config.from_object(config[config_name])
     register_extensions(app)
-    register_blueprints(app)
+    # register_blueprints(app)
     register_commands(app)
+    # register_prometheus(app)
     return app
 
 
 def register_extensions(app):
     db.init_app(app)
-    # api.init_app(app)
+    api.init_app(app)
+    metrics.init_app(app, api)
 
 
-def register_blueprints(app):
+# def register_blueprints(app):
     # app.register_blueprint(app_rustful,url_prefix="/admin")
-    app.register_blueprint(app_rustful)
-    app.register_blueprint(api_bp, url_prefix="/api")
+    # app.register_blueprint(api_bp)
+    # app.register_blueprint(api_bp, url_prefix="/api")
 
 
 # def register_shell_context(app):

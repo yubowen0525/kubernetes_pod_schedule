@@ -6,6 +6,7 @@ WORKDIR /Project/Demo
 
 ARG version=v3
 ENV imageVersion=$version
+ENV prometheus_multiproc_dir=/Project/Demo
 ENV LC_ALL C.UTF-8
 ENV LANG C.UTF-8
 # 拷贝本地文件到镜像中
@@ -15,6 +16,6 @@ COPY ./ ./
 RUN pip install -r requirements.txt;
 
 
-#CMD ["gunicorn","wsgi:app","-c","./gunicorn.conf.py"]
+CMD ["gunicorn","wsgi:app","-c","./gunicorn.conf.py"]
 #CMD ["flask","run","--host=0.0.0.0","--port=80"]
-CMD ["uwsgi","./uwsgi.ini"]
+#CMD ["uwsgi","./uwsgi.ini"]
